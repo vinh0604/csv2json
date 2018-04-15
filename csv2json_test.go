@@ -11,6 +11,7 @@ type Person struct {
 	Name     interface{} `json:"name"`
 	Age      interface{} `json:"age"`
 	Location interface{} `json:"location"`
+	Active   interface{} `json:"active"`
 }
 
 func TestConvertShouldUseFirstRowAsHeadersIfHeadersAreEmpty(t *testing.T) {
