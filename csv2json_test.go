@@ -1,4 +1,4 @@
-package csv2json
+package main
 
 import (
 	"encoding/json"

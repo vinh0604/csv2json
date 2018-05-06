@@ -1,4 +1,4 @@
-package csv2json
+package main
 
 import (
 	"encoding/csv"
@@ -32,6 +32,17 @@ func Convert(data string, headers []Header) string {
 	return string(jsonBytes[:])
 }
 
+// ConvertStringValue convert string value to proper json type
+func ConvertStringValue(stringValue string, jsonType string) (interface{}, error) {
+	if jsonType == "number" {
+		return strconv.Atoi(stringValue)
+	} else if jsonType == "boolean" {
+		return strconv.ParseBool(stringValue)
+	} else {
+		return stringValue, nil
+	}
+}
+
 func convertFirstLineToHeader(lineValues []string) []Header {
 	headers := []Header{}
 	for _, key := range lineValues {
@@ -43,16 +54,7 @@ func convertFirstLineToHeader(lineValues []string) []Header {
 func convertLineToJSONObject(lineValues []string, headers []Header) map[string]interface{} {
 	jsonObj := make(map[string]interface{})
 	for col, header := range headers {
-		var value interface{}
-		var err error
-		if header.Type == "number" {
-			value, err = strconv.Atoi(lineValues[col])
-		} else if header.Type == "boolean" {
-			value, err = strconv.ParseBool(lineValues[col])
-		} else {
-			value, err = lineValues[col], nil
-		}
-
+		value, err := ConvertStringValue(lineValues[col], header.Type)
 		if err == nil {
 			jsonObj[header.Name] = value
 		} else {
